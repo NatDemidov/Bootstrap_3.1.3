@@ -13,6 +13,7 @@
 <p th:text="${user.getFirstName()}" />
 <p th:text="${user.getLastName()}" />
 <p th:text="${user.getEmail()}" />
+<p th:each="role : ${user.getRoles()}" th:text="${role.name}"></p>
 
 <br>
 <form class="form-signin" method="get" action="/logout">

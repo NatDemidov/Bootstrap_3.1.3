@@ -5,17 +5,19 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
-
 import java.security.Principal;
 
 @Controller
 public class UsersController {
 
     private UserService userService;
+    private RoleService roleService;
 
-    public UsersController(UserService userService) {
+    public UsersController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     //User
@@ -34,7 +36,8 @@ public class UsersController {
     }
 
     @GetMapping(value = "admin/new")
-    public String newUser(@ModelAttribute("user") User user) {
+    public String newUser(@ModelAttribute("user") User user, Model model) {
+        model.addAttribute("roles", roleService.listRoles());
         return "new";
     }
 
@@ -47,6 +50,7 @@ public class UsersController {
     @GetMapping("admin/{id}/edit")
     public String edit(Model model, @PathVariable("id") Long id) {
         model.addAttribute("user", userService.getById(id));
+        model.addAttribute("roles", roleService.listRoles());
         return "edit";
     }
 

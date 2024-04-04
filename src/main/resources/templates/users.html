@@ -17,6 +17,7 @@
                 <th>FirstName</th>
                 <th>LastName</th>
                 <th>Email</th>
+                <th>Roles</th>
                 <th>Operations</th>
             </tr>
             <tr th:each = "user : ${users}">
@@ -24,6 +25,10 @@
                 <td th:utext="${user.getFirstName()}">...</td>
                 <td th:utext="${user.getLastName()}">...</td>
                 <td th:utext="${user.getEmail()}">...</td>
+                <td> <th:block th:each="role : ${user.getRoles()}">
+                    <p th:text="${role.name}"></p>
+                </th:block></td>
+
                 <td><a th:href="@{/admin/{id}/edit(id=${user.getId()})}">Update</a></td>
                 <td> <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.getId()})}">
                     <input type="submit" value="Delete">
