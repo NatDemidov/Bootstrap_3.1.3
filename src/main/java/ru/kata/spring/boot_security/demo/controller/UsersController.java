@@ -30,33 +30,24 @@ public class UsersController {
 
     //Admin
     @GetMapping(value = "/admin")
-    public String pageForAdmin(ModelMap model){
+    public String pageForAdmin(Principal principal, ModelMap model) {
         model.addAttribute("users", userService.listUsers());
+        model.addAttribute("thisUser",
+                userService.findByUsername(principal.getName()));
+        model.addAttribute("newUser", new User());
+        model.addAttribute("roles", roleService.listRoles());
         return "users";
     }
 
-    @GetMapping(value = "admin/new")
-    public String newUser(@ModelAttribute("user") User user, Model model) {
-        model.addAttribute("roles", roleService.listRoles());
-        return "new";
-    }
-
     @PostMapping("admin")
-    public String addUser(@ModelAttribute("user") User user) {
-        userService.add(user);
+    public String addUser(@ModelAttribute("newUser") User newUser) {
+        userService.add(newUser);
         return "redirect:/admin";
     }
 
-    @GetMapping("admin/{id}/edit")
-    public String edit(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("user", userService.getById(id));
-        model.addAttribute("roles", roleService.listRoles());
-        return "edit";
-    }
-
-    @PatchMapping("admin/{id}")
-    public String update(@ModelAttribute("user") User user) {
-        userService.update(user);
+    @PostMapping("admin/update")
+    public String update(@ModelAttribute("userToEdit") User userToEdit) {
+        userService.update(userToEdit);
         return "redirect:/admin";
     }
 

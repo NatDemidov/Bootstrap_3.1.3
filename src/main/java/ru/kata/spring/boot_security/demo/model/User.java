@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,8 @@ public class User implements UserDetails {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
+    @Column(name="age")
+    private Integer age;
     @Column(name = "email")
     private String email;
     @Column(name = "username")
@@ -26,6 +29,7 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonBackReference
     private Set<Role> roles;
 
     public User() {
@@ -38,9 +42,10 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public User(String firstName, String lastName, String email, String username, String password, Set<Role> roles) {
+    public User(String firstName, String lastName, Integer age, String email, String username, String password, Set<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.age = age;
         this.email = email;
         this.username = username;
         this.password = password;
@@ -69,6 +74,14 @@ public class User implements UserDetails {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public String getEmail() {

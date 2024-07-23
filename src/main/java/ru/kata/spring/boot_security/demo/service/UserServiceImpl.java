@@ -42,8 +42,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void update(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userDao.update(user);
+        if (!user.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userDao.update(user);
+        } else {
+            user.setPassword(userDao.getById(user.getId()).getPassword());
+            userDao.update(user);
+        }
     }
 
     @Override
@@ -60,17 +65,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User findByUsername(String username) {
+    public User findByUsername(String username) throws UsernameNotFoundException {
         return userDao.findByUsername(username);
     }
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userDao.findByEmail(email);
 
         if(user == null) {
-            throw new UsernameNotFoundException(String.format("User 'Xs' not found.", username));
+            throw new UsernameNotFoundException(String.format("User 'Xs' not found.", email));
         }
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(),
