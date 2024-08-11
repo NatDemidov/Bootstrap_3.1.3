@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         User user = userDao.findByEmail(email);
 
         if(user == null) {
-            throw new UsernameNotFoundException(String.format("User 'Xs' not found.", email));
+            throw new UsernameNotFoundException(String.format("User with email 'Xs' not found.", email));
         }
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(),
